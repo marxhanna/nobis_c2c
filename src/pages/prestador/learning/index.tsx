@@ -55,9 +55,6 @@ const Dashboard: React.FC = () => {
   }, {
     key: 'learning/comunicados',
     label: 'Mensagens',
-  }, {
-    key: '/transparencia',
-    label: 'Transparência',
   }].map((e) => ({ ...e, onClick: ({ key }) => navigate(key) }))
 
   const location = useLocation()

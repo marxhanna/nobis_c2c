@@ -61,7 +61,7 @@ export default function Inicio() {
   const handleSave = async (values) => {
     try {
       const formattedBirthdate = moment(values.birthdate, 'DD/MM/YYYY').format('YYYY-MM-DD');
-      
+
       const response = await fetch(`${baseUrl}/users/${uuid}`, {
         method: 'PUT',
         headers: {
@@ -73,19 +73,20 @@ export default function Inicio() {
           operationRadius: values.serviceRadius,
           birthdate: formattedBirthdate,
           payments: values.paymentTypes ? values.paymentTypes.join(', ') : '',
+           isLookingForJob: values.isLookingForJob ?? false,
         }),
       });
-  
+
       if (!response.ok) {
         throw new Error('Erro ao tentar atualizar perfil. Por favor tente novamente.');
       }
-  
+
       message.success('Dados atualizados com sucesso!');
-  
+
       // Atualizar o estado com os dados mais recentes, sem recarregar a página
       const updatedDataResponse = await fetch(`${baseUrl}/users/profile/${uuid}`);
       const updatedData = await updatedDataResponse.json();
-  
+
       setDados(updatedData[0]); // Atualiza os dados
       setEditMode(false); // Sai do modo de edição
       window.location.reload();
@@ -94,8 +95,8 @@ export default function Inicio() {
       message.error('Erro ao tentar atualizar perfil. Por favor tente novamente.');
     }
   };
-  
-  
+
+
 
   if (loading) {
     return <div className='container'><img src={spinner} alt="loading" /></div>;
@@ -107,7 +108,7 @@ export default function Inicio() {
 
   const {
     avatar, fullName, clientRatings, email, phone, genre, birthdate: storedBirthdate, address, number, complement, about,
-    city, state, cep, role, birthContry, budget, deficiency, operationRadius, payments = []
+    city, state, cep, role, birthContry, budget, deficiency, operationRadius, portfolioUrl, payments = []
   } = dados;
 
   // Calculando a média de classificação
@@ -119,7 +120,7 @@ export default function Inicio() {
 
   return (
     <>
-       {isMobile ? <HeaderMobile /> : <Header />}
+      {isMobile ? <HeaderMobile /> : <Header />}
       <br /><br /><br />
       <div className="container" style={{ padding: '20px' }}>
         <h1 className='title'>Meus Dados</h1>
@@ -143,6 +144,8 @@ export default function Inicio() {
                 birthContry,
                 budget,
                 deficiency,
+                portfolioUrl,
+                isLookingForJob: dados?.isLookingForJob ?? false, 
                 serviceRadius: operationRadius,
                 payments: payments.map(payment => payment.type)
               }}
@@ -296,7 +299,24 @@ export default function Inicio() {
                   prefix="R$"
                   placeholder="0,00"
                 />
+
+
               </Form.Item>
+              <Form.Item name="portfolioUrl" label="Link do Portfólio">
+                <Input placeholder={portfolioUrl || 'https://meuportfolio.com'} />
+              </Form.Item>
+                  
+
+              <Form.Item
+                name="isLookingForJob"
+                valuePropName="checked"
+                label="Estou atualmente desempregado/trabalhando informalmente e gostaria de entrar para o banco de talentos da Nobis."
+              >
+                <Checkbox>Sim</Checkbox>
+              </Form.Item>
+
+
+
               <Form.Item
                 label="Deficiência"
                 name="deficiency"

@@ -54,6 +54,9 @@ import LearningIndex from './pages/prestador/learning';
 import PrestadorVideos from './pages/prestador/learning/videos';
 import TransparenciaPrestador from './pages/prestador/transparencia';
 import MensageriaTodas from './pages/parceiroDigital/mensageria-todas';
+import MeusProjetos from './pages/parceiroDigital/meus-projetos';
+import EditarProjeto from './pages/parceiroDigital/editar-projeto';
+import RecuperaSenha from './pages/parceiroDigital/recuperar-senha';
 
 
 const Routes: React.FC = () => {
@@ -221,6 +224,14 @@ const Routes: React.FC = () => {
           element: <CriarProjeto />
         },
         {
+          path: "meus-projetos",
+          element: <MeusProjetos />
+        },
+        {
+          path: "meus-projetos/:uuid/editar",
+          element: <EditarProjeto />
+        },
+        {
           path: "logout",
           element: <LogOut />
         },
@@ -292,6 +303,10 @@ const Routes: React.FC = () => {
     {
       path: "/parceiro-digital/login",
       element: <LoginParceiroDigital />
+    },
+    {
+      path: "/parceiro-digital/recuperar-senha/:code?",
+      element: <RecuperaSenha />
     },
     {
       path: "/parceiro-digital/cadastrar",

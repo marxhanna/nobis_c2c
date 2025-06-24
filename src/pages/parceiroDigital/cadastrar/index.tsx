@@ -205,6 +205,7 @@ const Cadastrar = () => {
           <Form.Item<CompanyInfo>
             label="Logomarca"
             name="image"
+            rules={[{ required: false, message: 'Por favor, selecione uma imagem!' }]}
           >
             <Upload listType='picture' maxCount={1} beforeUpload={() => false} >
               <Button icon={<UploadOutlined />}>Selecione imagem</Button>

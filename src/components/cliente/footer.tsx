@@ -9,12 +9,31 @@ import { Popover } from 'antd';
 
 const Footer = () => (
   <div className='footer'>
-    <div className='icons'>
-      <Popover content={"Início"}><Link to='/inicio'><img src={home} /></Link></Popover>
-      <Popover content={"Busca de serviços"}><Link to='/busca'><img src={busca} /></Link></Popover>
-      <Popover content={"Chats de serviços"}><Link to='/chats'><img src={chat} /></Link></Popover>
-      <Popover content={"Histórico de serviços"}><Link to='/historico'><img src={historico} /></Link></Popover>
-      <Popover content={"Configurações"}><Link to='/configuracoes'><img src={config} /></Link></Popover>
+    <div className='icons' style={{ display: 'flex', justifyContent: 'space-around' }}>
+      <div style={{ textAlign: 'center' }}>
+        <Link to='/inicio'><img src={home} /></Link>
+        <p>Início</p>
+      </div>
+
+      <div style={{ textAlign: 'center' }}>
+        <Link to='/busca'><img src={busca} /></Link>
+        <p>Serviços</p>
+      </div>
+
+      <div style={{ textAlign: 'center' }}>
+        <Link to='/chats'><img src={chat} /></Link>
+        <p>Chats</p>
+      </div>
+
+      <div style={{ textAlign: 'center' }}>
+        <Link to='/historico'><img src={historico} /></Link>
+        <p>Histórico</p>
+      </div>
+
+      <div style={{ textAlign: 'center' }}>
+        <Link to='/configuracoes'><img src={config} /></Link>
+        <p>Configurações</p>
+      </div>
     </div>
   </div>
 )

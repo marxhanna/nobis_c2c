@@ -70,8 +70,15 @@ const Dashboard: React.FC = () => {
       label: 'Enviar Mensagem',
     }]
   }, {
-    key: '/parceiro-digital/criar-projeto',
-    label: 'Novo Projeto',
+    key: 4,
+    label: 'Projetos',
+    children: [{
+      key: '/parceiro-digital/criar-projeto',
+      label: 'Criar Projeto',
+    }, {
+      key: '/parceiro-digital/meus-projetos',
+      label: 'Meus Projetos',
+    }]
   }, {
     key: '/parceiro-digital/transparencia',
     label: 'Transparência',

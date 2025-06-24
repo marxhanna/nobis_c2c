@@ -1,4 +1,4 @@
-import { Button, Form, Input, notification, Upload } from "antd";
+import { Button, Form, Input, InputNumber, notification, Upload } from "antd";
 import type { FormProps } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -133,7 +133,7 @@ const CriarProjeto = () => {
                 { required: true, message: "Insira a duração do projeto" },
               ]}
             >
-              <Input placeholder="Ex.: 2, 3, etc." />
+              <InputNumber style={{ width: "100%" }} placeholder="Ex.: 2, 3, etc." />
             </Form.Item>
 
             <Form.Item<FieldType>

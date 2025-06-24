@@ -161,23 +161,23 @@ const Infos = () => {
 
   return (
     <>
-    <div style={{ padding: '16px 48px', backgroundColor: '#fafafa' }}>
-    <Select
-      placeholder="Selecione um projeto"
-      style={{ width: '100%' }}
-      value={selectedProjectUuid} // Define o valor atual selecionado
-      onChange={(value) => setSelectedProjectUuid(value)} // Atualiza o estado quando o usuário seleciona
-    >
-      <Option key={0} value={"general"}>
-          Geral
-      </Option>
-      {projects.map((project: { id: number; title: string; uuid: string }) => (
-        <Option key={project.id} value={project.uuid}>
-          {project.title}
-        </Option>
-      ))}
-    </Select>
-        </div>
+      <div style={{ padding: '16px 48px', backgroundColor: '#fafafa' }}>
+        <Select
+          placeholder="Selecione um projeto"
+          style={{ width: '100%' }}
+          value={selectedProjectUuid} // Define o valor atual selecionado
+          onChange={(value) => setSelectedProjectUuid(value)} // Atualiza o estado quando o usuário seleciona
+        >
+          <Option key={0} value={"general"}>
+              Geral
+          </Option>
+          {projects.map((project: { id: number; title: string; uuid: string }) => (
+            <Option key={project.id} value={project.uuid}>
+              {project.title}
+            </Option>
+          ))}
+        </Select>
+      </div>
     <div
       style={{
         padding: 24,
@@ -206,12 +206,25 @@ const Infos = () => {
       ) : dashboard ? (
         <>
         {selectedProjectUuid !== "general" && (
+          <>
           <Card>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <p style={{ fontSize: "15px" }}><b>Cadastro de afiliado:</b> <Link className="digitalPartnerLink" to={`/cadastro/${dashboard.project.code}`} target="_blank" rel="noopener noreferrer">https://plataforma.nobisapp.com.br/cadastro/{dashboard.project.code}</Link></p>
+            <div style={{ display: "flex", alignItems: "center", flexDirection: "column"  }}>
+              <p style={{ fontSize: "15px" }}><b>Cadastro de afiliado:</b> <br/> <Link className="digitalPartnerLink" to={`/cadastro/${dashboard.project.code}`} target="_blank" rel="noopener noreferrer">https://plataforma.nobisapp.com.br/cadastro/{dashboard.project.code}</Link></p>
               <CopyLinkButton link={`https://plataforma.nobisapp.com.br/cadastro/${dashboard.project.code}`} />
             </div>
           </Card>
+          <Card>
+              <div style={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
+                <p style={{ fontSize: "15px" }}>
+                  <b>Use este link para divulgar o projeto:</b> <br/> 
+                  <Link className="digitalPartnerLink" to={`https://projetos.nobisapp.com.br/${dashboard.project.uuid}`} target="_blank" rel="noopener noreferrer">
+                    https://projetos.nobisapp.com.br/{dashboard.project.uuid}
+                  </Link>
+                </p>
+                <CopyLinkButton link={`https://projetos.nobisapp.com.br/${dashboard.project.uuid}`} />
+              </div>
+          </Card>
+          </>
         )}
           
           <div style={{

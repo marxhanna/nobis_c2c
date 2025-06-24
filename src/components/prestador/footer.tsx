@@ -31,6 +31,8 @@ const Footer = () => (
   </div>
 )
 
+
+
 const ResponsiveFooter: React.FC = () => {
   /*
   const [isMobile, setIsMobile] = useState<boolean>(false);

@@ -142,12 +142,12 @@ const { Panel } = Collapse;
           }}
         >
             <Header>
-                <h1>Documentos de Transparência de Projeto</h1>
-                <Link to="enviar-documentos">
-                    <Button type="primary" icon={<PlusOutlined />}>
-                        Adicionar arquivo
-                    </Button>
-                </Link>
+              <h1>Documentos de Transparência de Projeto</h1>
+              <Link to="enviar-documentos">
+                <Button type="primary" icon={<PlusOutlined />}>
+                    Adicionar arquivo
+                </Button>
+              </Link>
             </Header>
             <Table  dataSource={dataSource} columns={columns} />
         </div>

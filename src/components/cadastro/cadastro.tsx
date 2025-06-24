@@ -18,6 +18,11 @@ const RegistrationForm = () => {
 
   const [loading, setLoading] = useState(false);
 
+
+  const [formErrors, setFormErrors] = useState<string[]>([]);
+
+
+
   const [api, contextHolder] = notification.useNotification();
 
   const [form] = Form.useForm();
@@ -34,20 +39,20 @@ const RegistrationForm = () => {
 
   const handleJoinProject = async (projectCode: string) => {
     const authToken = localStorage.getItem('authToken');
-  
+
     if (!authToken) {
       message.error("Token de autorização não encontrado.");
       return;
     }
-  
+
     if (!projectCode.trim()) {
       message.error("Por favor, insira um código válido.");
       return;
     }
-  
+
     try {
       setLoading(true);
-  
+
       const response = await fetch(`${baseUrl}/users/into/project/${projectCode}`, {
         method: 'PUT',
         headers: {
@@ -55,10 +60,10 @@ const RegistrationForm = () => {
           'Content-Type': 'application/json',
         },
       });
-  
+
       if (response.ok) {
         const contentType = response.headers.get('content-type');
-        
+
         // Identifique o formato da resposta
         let responseBody: any;
         if (contentType && contentType.includes('application/json')) {
@@ -70,7 +75,7 @@ const RegistrationForm = () => {
           message.success(`Você entrou no projeto com sucesso!`);
           console.log("Resposta do servidor (Texto):", responseBody);
         }
-  
+
         setIsProjectModalVisible(false);
         setLoading(false);
         setProjectCode('');
@@ -86,7 +91,7 @@ const RegistrationForm = () => {
       setLoading(false);
     }
   };
-  
+
 
   useEffect(() => {
     const authToken = localStorage.getItem('authToken');
@@ -121,7 +126,7 @@ const RegistrationForm = () => {
     const formattedDate = moment(e.target.value, 'DD/MM/YYYY').format('YYYY-MM-DD');
     setBirthdate(formattedDate);
   };
-  
+
   const onServiceTypeChange = (e: RadioChangeEvent) => setServiceType(e.target.value);
   const onDisabilityChange = (e: RadioChangeEvent) => setHasDisability(e.target.value === 'yes');
   const handleCheckboxChange = (e: CheckboxChangeEvent) => setChecked(e.target.checked);
@@ -168,23 +173,55 @@ const RegistrationForm = () => {
 
     try {
       setLoading(true);
-      const response = await fetch(`${baseUrl}/users`, { method: 'POST', body: formData });
+      const response = await fetch(`${baseUrl}/users`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json(); // <- sempre tenta extrair
+
       if (response.ok) {
         window.location.href = '/login';
-        setLoading(false);
+      } else if (data.errors) {
+        // Exibe erros nos campos do formulário
+        form.setFields(
+          Object.entries(data.errors).map(([field, message]) => ({
+            name: field,
+            errors: [message as string],
+          }))
+        );
+
+        // Exibe no Alert de topo
+        notification.error({
+          message: 'Erros encontrados no cadastro:',
+          description: (
+            <ul style={{ margin: 0, paddingLeft: 20 }}>
+              {Object.values(data.errors).map((msg, idx) => (
+                <li key={idx}>{msg}</li>
+              ))}
+            </ul>
+          ),
+          duration: 6,
+        });
       } else {
-        throw new Error('Failed to register');
+        notification.error({
+          message: 'Erro ao cadastrar',
+          description: data.message || 'Erro desconhecido. Tente novamente.',
+          duration: 5,
+        });
       }
-    } catch (err) {
+    } catch (err: any) {
+      console.error("Erro inesperado:", err);
       notification.error({
-        message: 'Erro ao cadastrar',
-        description: 'Algo deu errado, revise os campos e tente novamente',
+        message: 'Erro inesperado',
+        description: err?.message || 'Erro ao processar a requisição.',
         duration: 5,
       });
+    } finally {
       setLoading(false);
-      console.error(err);
     }
   };
+
 
   const handleAvatarUpload = ({ file }: any) => setPfp(file);
 
@@ -227,6 +264,29 @@ const RegistrationForm = () => {
       }}
     >
       {contextHolder}
+
+
+      {formErrors.length > 0 && (
+        <Alert
+          message="Erros encontrados no cadastro:"
+          description={
+            <ul style={{ margin: 0, paddingLeft: 20 }}>
+              {formErrors.map((msg, idx) => (
+                <li key={idx}>{msg}</li>
+              ))}
+            </ul>
+          }
+          type="error"
+          showIcon
+          closable
+          onClose={() => setFormErrors([])}
+          style={{ marginBottom: '16px' }}
+        />
+      )}
+
+
+
+
       {pdCode ? (
         <>
           {/* Elements for registered providers */}
@@ -241,7 +301,7 @@ const RegistrationForm = () => {
           </Form.Item>
         </>
       )}
-      
+
       {/* fullName */}
       <Form.Item
         name="name"
@@ -311,7 +371,7 @@ const RegistrationForm = () => {
           placeholder="DD/MM/AAAA"
           value={moment(birthdate, 'YYYY-MM-DD').format('DD/MM/YYYY')}
           onChange={handleDateChange}
-        > 
+        >
           {(inputProps: any) => <Input {...inputProps} style={{ width: 400 }} />}
         </InputMask>
       </Form.Item>
@@ -506,7 +566,7 @@ const RegistrationForm = () => {
             </Upload>
           </Form.Item>
             {*/}
-          
+
           {/* badges -> false por padrão, true se o checkbox for marcado */}
           <Form.Item name="badges" valuePropName="checked" label={
             <div style={{ display: "flex", alignItems: "center" }}>
@@ -549,6 +609,23 @@ const RegistrationForm = () => {
         type="info"
         showIcon
       />
+
+      <br />
+
+
+      <Form.Item
+        name="aceitaLGPD"
+        valuePropName="checked"
+        rules={[{ required: true, message: 'Você precisa aceitar os termos da LGPD!' }]}
+      >
+        <Checkbox>
+          Declaro que li e aceito a <a target="_blank" rel="noopener noreferrer">Política de Privacidade</a> e estou de acordo com a coleta e uso dos meus dados conforme a LGPD.
+        </Checkbox>
+      </Form.Item>
+
+
+
+
       <br />
       <Form.Item>
         <Button type="primary" htmlType="submit" loading={loading}>Cadastrar</Button>
